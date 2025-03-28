@@ -21,12 +21,14 @@ struct SharedBuffer {
     sem_t full;
     sem_t mutex;
 };
+
 As we can see, the table is a max of 2 items and it tracks the number of data that is placed on the buffer. Then there's a variable for a sempahore for empty slots and another of for a sempaphore for filled slots and then a mutex to protect critical section.
 
 ## Setting Up Shared Memory
 int shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666);
 ftruncate(shm_fd, sizeof(SharedBuffer));
 buffer = (SharedBuffer*)mmap(nullptr, sizeof(SharedBuffer), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+
 This is how both producer and consumer use shared memory to communicate
 shm_open() → that creates or opens shared memory.
 ftruncate() → to resizes the shared memory.
